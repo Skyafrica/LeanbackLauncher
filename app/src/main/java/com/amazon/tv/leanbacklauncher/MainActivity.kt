@@ -10,6 +10,7 @@ import android.appwidget.AppWidgetProviderInfo
 import android.content.*
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
@@ -18,12 +19,11 @@ import android.media.tv.TvContract
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
+import android.text.Editable
 import android.text.TextUtils
+import android.util.AttributeSet
 import android.util.Log
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.ViewGroup.OnHierarchyChangeListener
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.accessibility.AccessibilityManager
@@ -76,11 +76,21 @@ import java.io.FileDescriptor
 import java.io.PrintWriter
 import java.lang.Runnable
 import java.lang.String.format
+import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.Method
 import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import kotlin.math.roundToInt
+import android.view.InflateException
+
+import android.widget.TextView
+
+import android.view.LayoutInflater
+
+
+
 
 
 class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
@@ -327,7 +337,12 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         val appContext = applicationContext
         setContentView(R.layout.activity_main)
 
-       //mainlayout1 = findViewById<View>(R.id.main_layout2) as ViewGroup
+
+
+
+
+
+        //mainlayout1 = findViewById<View>(R.id.main_layout2) as ViewGroup
 
 
         mAppWidgetManager1 = AppWidgetManager.getInstance(getApplicationContext())
@@ -517,37 +532,53 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
             findViewById<View>(R.id.widget1) as LinearLayout
 
         val childCount: Int = mainlayout1!!.getChildCount()
-        if (childCount > 1) {
+
+        if (childCount > 0) {
             val view: View = mainlayout1.getChildAt(childCount - 1)
             if (view is AppWidgetHostView) {
-                removeWidget((view as AppWidgetHostView)!!)
+               // removeWidget1((view as AppWidgetHostView)!!)
+                   showMenu(view)
                 return
             }
         }
-        else
-        {
+
+        else {
+
             val appWidgetId = mAppWidgetHost1!!.allocateAppWidgetId()
             val pickIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_PICK)
             pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             addEmptyData(pickIntent)
             startActivityForResult(pickIntent, R.id.REQUEST_PICK_APPWIDGET)
-            widget_id_custom=1
+            widget_id_custom = 1
         }
-
-
-
-
 
     }
 
+
     fun selectWidget2(view: View) {
 
-        val appWidgetId = mAppWidgetHost1!!.allocateAppWidgetId()
-        val pickIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_PICK)
-        pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-        addEmptyData(pickIntent)
-        startActivityForResult(pickIntent, R.id.REQUEST_PICK_APPWIDGET)
-        widget_id_custom=2
+        val mainlayout1: ViewGroup? =
+            findViewById<View>(R.id.widget2) as LinearLayout
+
+        val childCount: Int = mainlayout1!!.getChildCount()
+
+        if (childCount > 0) {
+            val view: View = mainlayout1.getChildAt(childCount - 1)
+            if (view is AppWidgetHostView) {
+                removeWidget2((view as AppWidgetHostView)!!)
+                return
+            }
+        }
+
+        else {
+
+            val appWidgetId = mAppWidgetHost1!!.allocateAppWidgetId()
+            val pickIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_PICK)
+            pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            addEmptyData(pickIntent)
+            startActivityForResult(pickIntent, R.id.REQUEST_PICK_APPWIDGET)
+            widget_id_custom = 2
+        }
 
     }
 
@@ -605,6 +636,10 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
     }
 
     override fun onBackPressed() {
+
+
+        currentFocus?.clearFocus();
+
         when {
             isInEditMode -> {
                 editModeView?.onBackPressed()
@@ -1556,9 +1591,23 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
     }
 
 
-    fun removeWidget(hostView: AppWidgetHostView) {
+    fun removeWidget1(hostView: AppWidgetHostView) {
         mAppWidgetHost1!!.deleteAppWidgetId(hostView.appWidgetId)
+        val mainlayout1: ViewGroup? = findViewById<View>(R.id.widget1) as LinearLayout
         mainlayout1?.removeView(hostView)
+        appWidgetId_w1=0
+    }
+    fun removeWidget2(hostView: AppWidgetHostView) {
+        mAppWidgetHost1!!.deleteAppWidgetId(hostView.appWidgetId)
+        val mainlayout1: ViewGroup? = findViewById<View>(R.id.widget2) as LinearLayout
+        mainlayout1?.removeView(hostView)
+        appWidgetId_w2=0
+    }
+    fun removeWidget3(hostView: AppWidgetHostView) {
+        mAppWidgetHost1!!.deleteAppWidgetId(hostView.appWidgetId)
+        val mainlayout1: ViewGroup? = findViewById<View>(R.id.widget3) as LinearLayout
+        mainlayout1?.removeView(hostView)
+        appWidgetId_w3=0
     }
 
 
@@ -1864,7 +1913,19 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
 
                     //end ofsasb widget selection
 
+                    val mainlayout1: ViewGroup? =
+                        findViewById<View>(R.id.widget1) as LinearLayout?
 
+
+                    mainlayout1?.setOnFocusChangeListener { _, hasFocus ->
+                        if (hasFocus) {
+                            //selectWidget1()
+                            Log.v("deleted", "deleted")
+
+                        } else {
+                            Log.v("deleted", "notdeleted")
+                        }
+                    }
                     //  selectWidget()
                     // settings
                     val settingsVG: ViewGroup? =
@@ -2198,5 +2259,62 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         }
         return false
     }
+
+    fun showMenu(v: View?) {
+        val popup = PopupMenu(this, v)
+
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener { item: MenuItem? ->
+            onMenuItemClick(
+                item!!
+            )
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popup.setForceShowIcon(true)
+        }
+        popup.inflate(R.menu.app_menu)
+        popup.show()
+    }
+
+    fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.open_widget1 -> {
+                //startActivityForResult(Intent(Settings.ACTION_WIFI_SETTINGS), 0)
+                val mainlayout1: ViewGroup? =
+                    findViewById<View>(R.id.widget1) as LinearLayout
+
+                val childCount: Int = mainlayout1!!.getChildCount()
+
+                if (childCount > 0) {
+                    val view: View = mainlayout1.getChildAt(childCount - 1)
+                    if (view is AppWidgetHostView) {
+                        view.requestFocus()
+                    }
+                }
+                true
+            }
+
+            R.id.delete_widget_1-> {
+               // startActivityForResult(Intent(Settings.ACTION_SOUND_SETTINGS), 0)
+
+                val mainlayout1: ViewGroup? =
+                    findViewById<View>(R.id.widget1) as LinearLayout
+
+                val childCount: Int = mainlayout1!!.getChildCount()
+
+                if (childCount > 0) {
+                    val view: View = mainlayout1.getChildAt(childCount - 1)
+                    if (view is AppWidgetHostView) {
+                        removeWidget1((view as AppWidgetHostView)!!)
+                    }
+                }
+                true
+            }
+
+
+            else -> false
+        }
+    }
+
 
 }
