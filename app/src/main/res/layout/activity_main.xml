@@ -23,4 +23,5 @@
         android:focusable="true" />
 
     <include layout="@layout/edit_mode_layer" />
+
 </FrameLayout>

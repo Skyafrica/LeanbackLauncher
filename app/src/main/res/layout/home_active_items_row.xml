@@ -38,6 +38,7 @@
             android:textSize="@dimen/header_text_size" />
     </androidx.leanback.widget.NonOverlappingLinearLayout>
 
+
     <com.amazon.tv.leanbacklauncher.ActiveItemsRowView
         android:id="@id/list"
         android:layout_width="fill_parent"
@@ -49,4 +50,19 @@
         android:gravity="top"
         android:paddingStart="@dimen/row_padding"
         android:paddingEnd="@dimen/row_padding" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom"
+        android:visibility="visible">
+
+        <WebView
+            android:id="@+id/smarhome_widget"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:visibility="visible"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/exo_white"></WebView>
+    </RelativeLayout>
 </com.amazon.tv.leanbacklauncher.ActiveFrame>

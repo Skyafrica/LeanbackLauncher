@@ -88,9 +88,8 @@ import android.view.InflateException
 import android.widget.TextView
 
 import android.view.LayoutInflater
-
-
-
+import android.webkit.WebView
+import android.webkit.WebViewClient
 
 
 class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
@@ -338,6 +337,26 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         setContentView(R.layout.activity_main)
 
 
+        //widgetwebview
+        var smarthome_widget_webview: WebView? = this.findViewById(R.id.smarhome_widget)
+        val webSettings = smarthome_widget_webview?.settings
+        if (smarthome_widget_webview != null) {
+            smarthome_widget_webview.webViewClient = WebViewClient()
+        }
+
+        //enabling javascript
+        if (webSettings != null) {
+            webSettings.javaScriptEnabled=true
+        }
+
+
+        // ipadress?.drop(4)
+        //Log.v("nabil", "device name is$ipaddress")
+        if (smarthome_widget_webview != null) {
+            smarthome_widget_webview.loadUrl("https://france24.com")
+        }
+
+        //widgetwebview
 
 
 
@@ -482,6 +501,24 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
 
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     mScrollManager?.onScrollStateChanged(newState)
+                    var smarthome_widget_webview: WebView? = findViewById(R.id.smarhome_widget)
+                    val webSettings = smarthome_widget_webview?.settings
+                    if (smarthome_widget_webview != null) {
+                        smarthome_widget_webview.webViewClient = WebViewClient()
+                    }
+
+                    //enabling javascript
+                    if (webSettings != null) {
+                        webSettings.javaScriptEnabled=true
+                    }
+
+
+                    // ipadress?.drop(4)
+                    //Log.v("nabil", "device name is$ipaddress")
+                    if (smarthome_widget_webview != null) {
+                        smarthome_widget_webview.loadUrl("https://france24.com")
+                    }
+
                 }
             })
         }
@@ -639,6 +676,12 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
 
 
         currentFocus?.clearFocus();
+
+
+
+
+
+
 
         when {
             isInEditMode -> {
@@ -1467,6 +1510,8 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
 
     override fun onResume() {
         var forceResort = true
+
+
         var z = true
         super.onResume()
         //selectWidget()
