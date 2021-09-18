@@ -5,7 +5,13 @@
     android:layout_height="fill_parent"
     android:background="@null"
     android:focusable="false">
-
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/nabil"
+        android:layout_marginLeft="300dp"
+        android:visibility="gone"
+        android:background="@color/lb_tv_white"></Button>
     <com.amazon.tv.leanbacklauncher.wallpaper.WallpaperImage
         android:id="@id/wallpaper"
         android:layout_width="fill_parent"

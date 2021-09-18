@@ -80,7 +80,7 @@ class WallpaperInstaller private constructor(context: Context) {
             // default background
             if (systemBg == null) systemBg =
                     // ResourcesCompat.getDrawable(resources, R.drawable.bg_default, null)
-                ContextCompat.getDrawable(mContext, R.drawable.bg_default)
+                ContextCompat.getDrawable(mContext, R.drawable.p1)
             val intrinsicWidth = systemBg!!.intrinsicWidth
             val intrinsicHeight = systemBg.intrinsicHeight
             val wallpaperWidth = getDisplayMetrics(mContext).widthPixels

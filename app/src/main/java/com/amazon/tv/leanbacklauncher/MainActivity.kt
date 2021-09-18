@@ -6,6 +6,7 @@ import android.app.*
 import android.appwidget.AppWidgetHost
 import android.appwidget.AppWidgetHostView
 import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProviderInfo
 import android.content.*
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
@@ -27,11 +28,10 @@ import android.view.ViewGroup.OnHierarchyChangeListener
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.accessibility.AccessibilityManager
 import android.view.animation.*
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.isDigitsOnly
 import androidx.leanback.widget.BaseGridView
@@ -91,6 +91,19 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
     var isInEditMode = false
         private set
     private var mAppWidgetHost: AppWidgetHost? = null
+
+    var mAppWidgetManager1: AppWidgetManager? = null
+    var mAppWidgetHost1: AppWidgetHost? = null
+
+
+    //restor widget 1
+    var appWidgetId_w1 = 0
+    var appWidgetId_w2 = 0
+    var appWidgetId_w3 = 0
+    var widget_id_custom=1
+
+    var mainlayout1: ViewGroup? = null
+
     private var mAppWidgetHostView: AppWidgetHostView? = null
     private var mAppWidgetManager: AppWidgetManager? = null
     private var mContentResolver: ContentResolver? = null
@@ -313,6 +326,24 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         }
         val appContext = applicationContext
         setContentView(R.layout.activity_main)
+
+       //mainlayout1 = findViewById<View>(R.id.main_layout2) as ViewGroup
+
+
+        mAppWidgetManager1 = AppWidgetManager.getInstance(getApplicationContext())
+        mAppWidgetHost1 = AppWidgetHost(getApplicationContext(), R.id.APPWIDGET_HOST_ID)
+
+        //val button_w2 = findViewById<View>(R.id.main_layout4) as CardView
+        //val button_w3 = findViewById<View>(R.id.main_layout5) as CardView
+
+        //button_w1.setOnClickListener(View.OnClickListener {
+         // selectWidget()
+
+        //})
+
+
+
+
         if (Partner.get(this).showLiveTvOnStartUp() && checkFirstRunAfterBoot()) {
             val tvIntent = Intent("android.intent.action.VIEW", TvContract.buildChannelUri(0))
             tvIntent.putExtra("com.google.android.leanbacklauncher.extra.TV_APP_ON_BOOT", true)
@@ -479,6 +510,67 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         }
     }
 
+
+    fun selectWidget1(view: View) {
+
+        val mainlayout1: ViewGroup? =
+            findViewById<View>(R.id.widget1) as LinearLayout
+
+        val childCount: Int = mainlayout1!!.getChildCount()
+        if (childCount > 1) {
+            val view: View = mainlayout1.getChildAt(childCount - 1)
+            if (view is AppWidgetHostView) {
+                removeWidget((view as AppWidgetHostView)!!)
+                return
+            }
+        }
+        else
+        {
+            val appWidgetId = mAppWidgetHost1!!.allocateAppWidgetId()
+            val pickIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_PICK)
+            pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            addEmptyData(pickIntent)
+            startActivityForResult(pickIntent, R.id.REQUEST_PICK_APPWIDGET)
+            widget_id_custom=1
+        }
+
+
+
+
+
+    }
+
+    fun selectWidget2(view: View) {
+
+        val appWidgetId = mAppWidgetHost1!!.allocateAppWidgetId()
+        val pickIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_PICK)
+        pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+        addEmptyData(pickIntent)
+        startActivityForResult(pickIntent, R.id.REQUEST_PICK_APPWIDGET)
+        widget_id_custom=2
+
+    }
+
+    fun selectWidget3(view: View) {
+
+        val appWidgetId = mAppWidgetHost1!!.allocateAppWidgetId()
+        val pickIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_PICK)
+        pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+        addEmptyData(pickIntent)
+        startActivityForResult(pickIntent, R.id.REQUEST_PICK_APPWIDGET)
+        widget_id_custom=3
+    }
+
+    fun addEmptyData(pickIntent: Intent) {
+        val customInfo = ArrayList<AppWidgetProviderInfo>()
+        pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_INFO, customInfo)
+        val customExtras = ArrayList<Bundle>()
+        pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_EXTRAS, customExtras)
+    }
+
+
+
+
     public override fun onDestroy() {
         Log.d(TAG, "onDestroy()")
         mHandler.removeMessages(3)
@@ -568,7 +660,80 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                 editModeView?.uninstallFailure()
             }
         }
+
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == R.id.REQUEST_PICK_APPWIDGET) {
+                if (data != null) {
+                    configureWidget(data)
+                }
+            } else if (requestCode == R.id.REQUEST_CREATE_APPWIDGET) {
+                if (data != null) {
+                    createWidget(data)
+                }
+            }
+        } else if (resultCode == RESULT_CANCELED && data != null) {
+            val appWidgetId = data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
+            if (appWidgetId != -1) {
+                mAppWidgetHost1!!.deleteAppWidgetId(appWidgetId)
+            }
+        }
+
+
     }
+
+    private fun configureWidget(data: Intent) {
+        val extras = data.extras
+        val appWidgetId = extras!!.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
+        val appWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId)
+        if (appWidgetInfo.configure != null) {
+            val intent = Intent(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE)
+            intent.component = appWidgetInfo.configure
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            startActivityForResult(intent, R.id.REQUEST_CREATE_APPWIDGET)
+        } else {
+            createWidget(data)
+        }
+    }
+
+    fun createWidget(data: Intent) {
+        val extras = data.extras
+        val appWidgetId = extras!!.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
+        val appWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId)
+        val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId, appWidgetInfo)
+        hostView.setAppWidget(appWidgetId, appWidgetInfo)
+        if  (widget_id_custom==1) {
+
+            appWidgetId_w1 = appWidgetId
+
+            val mainlayout1: ViewGroup? =
+                findViewById<View>(R.id.widget1) as LinearLayout
+            mainlayout1?.addView(hostView)
+        }
+
+        if  (widget_id_custom==2) {
+
+            appWidgetId_w2 = appWidgetId
+
+            val mainlayout1: ViewGroup? =
+                findViewById<View>(R.id.widget2) as LinearLayout
+            mainlayout1?.removeAllViews()
+            mainlayout1?.addView(hostView)
+        }
+        if  (widget_id_custom==3) {
+
+            appWidgetId_w3 = appWidgetId
+
+
+            val mainlayout1: ViewGroup? =
+                findViewById<View>(R.id.widget3) as LinearLayout
+
+            mainlayout1?.addView(hostView)
+        }
+
+
+    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -700,8 +865,7 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                                 // unused
                             }
                         }
-                    } else
-                        App.toast(R.string.user_location_warning, true)
+                    }
                 }
             }
 
@@ -1228,6 +1392,8 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
     override fun onStart() {
         var z = true
         super.onStart()
+        mAppWidgetHost1!!.startListening()
+
         mResetAfterIdleEnabled = false
         try {
             mAppWidgetHost?.startListening()
@@ -1268,6 +1434,7 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         var forceResort = true
         var z = true
         super.onResume()
+        //selectWidget()
         if (isBackgroundVisibleBehind) {
             //if (BuildConfig.DEBUG) Log.d(TAG, "onResume: BackgroundVisibleBehind")
             z = false
@@ -1370,6 +1537,7 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
 
     override fun onStop() {
         mResetAfterIdleEnabled = true
+        mAppWidgetHost1!!.stopListening()
         try {
             mAppWidgetHost?.stopListening()
         } catch (e: Exception) {
@@ -1386,6 +1554,13 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         mLaunchAnimation.reset()
         super.onStop()
     }
+
+
+    fun removeWidget(hostView: AppWidgetHostView) {
+        mAppWidgetHost1!!.deleteAppWidgetId(hostView.appWidgetId)
+        mainlayout1?.removeView(hostView)
+    }
+
 
     override fun dump(
         prefix: String,
@@ -1503,7 +1678,8 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         val wrapper: ViewGroup? = findViewById<View>(R.id.widget_wrapper) as? LinearLayout?
         wrapper?.let { wrap ->
             if (refresh || mAppWidgetHostView == null) {
-                wrap.removeAllViews()
+                wrap.removeAllViews() //sasb
+
                 var success = false
                 var appWidgetId = Util.getWidgetId(this)
                 val appWidgetComp = Partner.get(this).widgetComponentName
@@ -1514,8 +1690,10 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                             if (success && appWidgetComp != Util.getWidgetComponentName(this)) {
                                 clearWidget(appWidgetId)
                                 success = false
+
                             }
                             if (!success) {
+
                                 val width = resources.getDimension(R.dimen.widget_width).toInt()
                                 val height =
                                     resources.getDimension(R.dimen.widget_height).toInt()
@@ -1530,6 +1708,53 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                                     appWidgetInfo.provider,
                                     options
                                 ) == true
+
+                                //sasb widget selection
+
+                                if ((!(appWidgetId_w1==0))) {
+
+                                    val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w1)
+
+                                    val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w1, myappWidgetInfo)
+
+                                    val mainlayout1: ViewGroup? =
+                                        findViewById<View>(R.id.widget1) as LinearLayout
+
+                                    mainlayout1?.addView(hostView)
+
+
+                                }
+
+                                if ((!(appWidgetId_w2==0))) {
+
+                                    val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w2)
+
+                                    val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w2, myappWidgetInfo)
+
+                                    val mainlayout1: ViewGroup? =
+                                        findViewById<View>(R.id.widget2) as LinearLayout
+                                    mainlayout1?.addView(hostView)
+
+
+                                }
+                                if ((!(appWidgetId_w3==0))) {
+
+                                    val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w3)
+
+                                    val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w3, myappWidgetInfo)
+
+                                    val mainlayout1: ViewGroup? =
+                                        findViewById<View>(R.id.widget3) as LinearLayout
+                                    mainlayout1?.addView(hostView)
+
+
+                                }
+
+                                //end ofsasb widget selection
+
+
+
+
                             }
                             if (success) {
                                 mAppWidgetHostView =
@@ -1537,6 +1762,52 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                                 mAppWidgetHostView?.setAppWidget(appWidgetId, appWidgetInfo)
                                 wrap.addView(mAppWidgetHostView)
                                 Util.setWidget(this, appWidgetId, appWidgetInfo.provider)
+
+
+                                //sasb widget selection
+
+                                if ((!(appWidgetId_w1==0))) {
+
+                                    val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w1)
+
+                                    val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w1, myappWidgetInfo)
+
+                                    val mainlayout1: ViewGroup? =
+                                        findViewById<View>(R.id.widget1) as LinearLayout
+
+                                    mainlayout1?.addView(hostView)
+
+
+                                }
+
+                                if ((!(appWidgetId_w2==0))) {
+
+                                    val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w2)
+
+                                    val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w2, myappWidgetInfo)
+
+                                    val mainlayout1: ViewGroup? =
+                                        findViewById<View>(R.id.widget2) as LinearLayout
+                                    mainlayout1?.addView(hostView)
+
+
+                                }
+                                if ((!(appWidgetId_w3==0))) {
+
+                                    val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w3)
+
+                                    val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w3, myappWidgetInfo)
+
+                                    val mainlayout1: ViewGroup? =
+                                        findViewById<View>(R.id.widget3) as LinearLayout
+                                    mainlayout1?.addView(hostView)
+
+
+                                }
+
+                                //end ofsasb widget selection
+
+
                             }
                         }
                     }
@@ -1550,6 +1821,51 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                     typeface?.let {
                         clockView?.typeface = typeface
                     }
+                    //sasb widget selection
+
+                    if ((!(appWidgetId_w1==0))) {
+
+                        val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w1)
+
+                        val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w1, myappWidgetInfo)
+
+                        val mainlayout1: ViewGroup? =
+                            findViewById<View>(R.id.widget1) as LinearLayout
+
+                        mainlayout1?.addView(hostView)
+
+
+                    }
+
+                    if ((!(appWidgetId_w2==0))) {
+
+                        val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w2)
+
+                        val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w2, myappWidgetInfo)
+
+                        val mainlayout1: ViewGroup? =
+                            findViewById<View>(R.id.widget2) as LinearLayout
+                        mainlayout1?.addView(hostView)
+
+
+                    }
+                    if ((!(appWidgetId_w3==0))) {
+
+                        val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w3)
+
+                        val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w3, myappWidgetInfo)
+
+                        val mainlayout1: ViewGroup? =
+                            findViewById<View>(R.id.widget3) as LinearLayout
+                        mainlayout1?.addView(hostView)
+
+
+                    }
+
+                    //end ofsasb widget selection
+
+
+                    //  selectWidget()
                     // settings
                     val settingsVG: ViewGroup? =
                         findViewById<View>(R.id.settings) as LinearLayout?
@@ -1560,8 +1876,11 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                             PorterDuff.Mode.SRC_ATOP
                         )
                         val icon = findViewById<ImageView>(R.id.settings_icon)
+
+
                         group.setOnClickListener {
                             startSettings()
+
                         }
                         group.setOnFocusChangeListener { _, hasFocus ->
                             if (hasFocus) {
@@ -1594,15 +1913,110 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                     initializeWeather()
                     return
                 }
+
+
+                //sasb widget selection
+
+                if ((!(appWidgetId_w1==0))) {
+
+                    val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w1)
+
+                    val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w1, myappWidgetInfo)
+
+                    val mainlayout1: ViewGroup? =
+                        findViewById<View>(R.id.widget1) as LinearLayout
+
+                    mainlayout1?.addView(hostView)
+
+
+                }
+
+                if ((!(appWidgetId_w2==0))) {
+
+                    val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w2)
+
+                    val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w2, myappWidgetInfo)
+
+                    val mainlayout1: ViewGroup? =
+                        findViewById<View>(R.id.widget2) as LinearLayout
+                    mainlayout1?.addView(hostView)
+
+
+                }
+                if ((!(appWidgetId_w3==0))) {
+
+                    val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w3)
+
+                    val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w3, myappWidgetInfo)
+
+                    val mainlayout1: ViewGroup? =
+                        findViewById<View>(R.id.widget3) as LinearLayout
+                    mainlayout1?.addView(hostView)
+
+
+                }
+
+                //end ofsasb widget selection
+
+
+
                 return
             }
             val parent = mAppWidgetHostView!!.parent as ViewGroup
             if (parent !== wrap) {
                 parent.removeView(mAppWidgetHostView)
-                wrap.removeAllViews()
+                wrap.removeAllViews() //sasb
                 wrap.addView(mAppWidgetHostView)
+
+                //increment=increment+1;
+
+
             }
+
         }
+        //sasb widget selection
+
+        if ((!(appWidgetId_w1==0))) {
+
+            val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w1)
+
+            val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w1, myappWidgetInfo)
+
+            val mainlayout1: ViewGroup? =
+                findViewById<View>(R.id.widget1) as LinearLayout
+
+            mainlayout1?.addView(hostView)
+
+
+        }
+
+        if ((!(appWidgetId_w2==0))) {
+
+            val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w2)
+
+            val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w2, myappWidgetInfo)
+
+            val mainlayout1: ViewGroup? =
+                findViewById<View>(R.id.widget2) as LinearLayout
+            mainlayout1?.addView(hostView)
+
+
+        }
+        if ((!(appWidgetId_w3==0))) {
+
+            val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w3)
+
+            val hostView = mAppWidgetHost1!!.createView(getApplicationContext(), appWidgetId_w3, myappWidgetInfo)
+
+            val mainlayout1: ViewGroup? =
+                findViewById<View>(R.id.widget3) as LinearLayout
+            mainlayout1?.addView(hostView)
+
+
+        }
+
+        //end ofsasb widget selection
+
     }
 
     fun startSettings() {

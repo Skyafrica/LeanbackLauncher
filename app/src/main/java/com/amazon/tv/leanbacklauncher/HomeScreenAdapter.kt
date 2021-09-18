@@ -14,6 +14,7 @@ import android.view.View.OnLayoutChangeListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.leanback.app.BrowseSupportFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.amazon.tv.firetv.leanbacklauncher.apps.AppCategory
 import com.amazon.tv.firetv.leanbacklauncher.apps.FavoritesAdapter
@@ -79,6 +80,10 @@ class HomeScreenAdapter(
         mPartnerAdapter = null
         setHasStableIds(true)
         buildRowList()
+
+        //setTitle(getString(R.string.browse_title)); // Badge, when set, takes precedent
+        // over title
+        BrowseSupportFragment.HEADERS_ENABLED
         mAppsManager?.refreshLaunchPointList()
         mAppsManager?.registerUpdateReceivers()
         //if (Permission.isLocationPermissionGranted(mMainActivity))
@@ -340,6 +345,9 @@ class HomeScreenAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): HomeViewHolder {
         var view = View(parent.context)
         val mRow = mAllRowsList[position]
+
+        //setTitle(getString(R.string.browse_title)); // Badge, when set, takes precedent
+        // over title
         mRow.let { row ->
             when (row.type) {
                 RowType.SEARCH -> {
