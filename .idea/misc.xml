@@ -6,6 +6,8 @@
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable-xxxhdpi/border.xml" value="0.2703125" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable-xxxhdpi/mybutton.xml" value="0.2703125" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/banner_background.xml" value="0.2703125" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/border_buttons.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/borders.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/borders_new.xml" value="0.2703125" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/borders_new_unfocus.xml" value="0.2703125" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/mywiget.xml" value="0.2703125" />
@@ -14,7 +16,7 @@
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/app_banner.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/card_content_main.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/card_content_metadata.xml" value="0.13020833333333334" />
-        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/clock.xml" value="0.144" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/clock.xml" value="0.1" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/edit_mode_background.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/edit_mode_layer.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/home_active_items_row.xml" value="0.176" />

@@ -90,6 +90,10 @@ import android.widget.TextView
 import android.view.LayoutInflater
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.view.MotionEvent
+
+
+
 
 
 class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
@@ -104,7 +108,7 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
     var mAppWidgetManager1: AppWidgetManager? = null
     var mAppWidgetHost1: AppWidgetHost? = null
 
-
+     var first_webview_load=false
     //restor widget 1
     var appWidgetId_w1 = 0
     var appWidgetId_w2 = 0
@@ -335,11 +339,13 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         }
         val appContext = applicationContext
         setContentView(R.layout.activity_main)
+        first_webview_load=false
 
 
-        //widgetwebview
-        var smarthome_widget_webview: WebView? = this.findViewById(R.id.smarhome_widget)
+        //first web view
+        var smarthome_widget_webview: WebView? = findViewById(R.id.webview1)
         val webSettings = smarthome_widget_webview?.settings
+
         if (smarthome_widget_webview != null) {
             smarthome_widget_webview.webViewClient = WebViewClient()
         }
@@ -347,18 +353,85 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         //enabling javascript
         if (webSettings != null) {
             webSettings.javaScriptEnabled=true
+            webSettings.allowContentAccess=true
+            webSettings.databaseEnabled=true
         }
 
-
-        // ipadress?.drop(4)
-        //Log.v("nabil", "device name is$ipaddress")
         if (smarthome_widget_webview != null) {
-            smarthome_widget_webview.loadUrl("https://france24.com")
+            if (!first_webview_load)
+            { smarthome_widget_webview.reload()
+                smarthome_widget_webview.loadUrl("http://localhost:8123/sasb-home/home")
+
+            }
+
         }
 
-        //widgetwebview
+        //second webview
+
+        var smarthome_widget_webview2: WebView? = findViewById(R.id.webview2)
+        val webSettings2 = smarthome_widget_webview2?.settings
+
+        if (smarthome_widget_webview2 != null) {
+            smarthome_widget_webview2.webViewClient = WebViewClient()
+        }
+
+        //enabling javascript
+        if (webSettings2 != null) {
+            webSettings2.javaScriptEnabled=true
+            webSettings2.allowContentAccess=true
+            webSettings2.databaseEnabled=true
+        }
+
+        if (smarthome_widget_webview2 != null) {
+            if (!first_webview_load)
+
+            { smarthome_widget_webview2.reload()
+
+                smarthome_widget_webview2.loadUrl("http://localhost:8123/lovelace-upnp")
+            }
+        }
+
+        //third webview
+
+        var smarthome_widget_webview3: WebView? = findViewById(R.id.webview3)
+        val webSettings3 = smarthome_widget_webview3?.settings
+
+        if (smarthome_widget_webview3 != null) {
+
+            smarthome_widget_webview3.webViewClient = WebViewClient()
+        }
+
+        //enabling javascript
+        if (webSettings3 != null) {
+            webSettings3.javaScriptEnabled=true
+            webSettings3.allowContentAccess=true
+            webSettings3.databaseEnabled=true
+        }
+
+        if (smarthome_widget_webview3 != null) {
+            if (!first_webview_load)
+            { smarthome_widget_webview3.reload()
+                smarthome_widget_webview3.loadUrl("http://localhost:8123/lovelace-presence")
+                first_webview_load=true
+            }
+        }
 
 
+        smarthome_widget_webview?.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                return true
+            }
+        })
+        smarthome_widget_webview2?.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                return true
+            }
+        })
+        smarthome_widget_webview3?.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                return true
+            }
+        })
 
 
         //mainlayout1 = findViewById<View>(R.id.main_layout2) as ViewGroup
@@ -374,7 +447,6 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
          // selectWidget()
 
         //})
-
 
 
 
@@ -501,8 +573,10 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
 
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     mScrollManager?.onScrollStateChanged(newState)
-                    var smarthome_widget_webview: WebView? = findViewById(R.id.smarhome_widget)
+                    //first web view
+                    var smarthome_widget_webview: WebView? = findViewById(R.id.webview1)
                     val webSettings = smarthome_widget_webview?.settings
+
                     if (smarthome_widget_webview != null) {
                         smarthome_widget_webview.webViewClient = WebViewClient()
                     }
@@ -510,13 +584,67 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                     //enabling javascript
                     if (webSettings != null) {
                         webSettings.javaScriptEnabled=true
+                        webSettings.allowContentAccess=true
+                        webSettings.databaseEnabled=true
+                        webSettings.domStorageEnabled=true
+                        webSettings.useWideViewPort=true
                     }
 
-
-                    // ipadress?.drop(4)
-                    //Log.v("nabil", "device name is$ipaddress")
                     if (smarthome_widget_webview != null) {
-                        smarthome_widget_webview.loadUrl("https://france24.com")
+                        if (!first_webview_load)
+                        { smarthome_widget_webview.loadUrl("http://localhost:8123/sasb-home/home")
+
+                        }
+
+                    }
+
+                    //second webview
+
+                    var smarthome_widget_webview2: WebView? = findViewById(R.id.webview2)
+                    val webSettings2 = smarthome_widget_webview2?.settings
+
+                    if (smarthome_widget_webview2 != null) {
+                        smarthome_widget_webview2.webViewClient = WebViewClient()
+                    }
+
+                    //enabling javascript
+                    if (webSettings2 != null) {
+                        webSettings2.javaScriptEnabled=true
+                        webSettings2.allowContentAccess=true
+                        webSettings2.databaseEnabled=true
+                        webSettings2.domStorageEnabled=true
+                        webSettings2.useWideViewPort=true
+                    }
+
+                    if (smarthome_widget_webview2 != null) {
+                        if (!first_webview_load)
+                        { smarthome_widget_webview2.loadUrl("http://localhost:8123/lovelace-upnp")
+                        }
+                    }
+
+                  //third webview
+
+                    var smarthome_widget_webview3: WebView? = findViewById(R.id.webview3)
+                    val webSettings3 = smarthome_widget_webview3?.settings
+
+                    if (smarthome_widget_webview3 != null) {
+                        smarthome_widget_webview3.webViewClient = WebViewClient()
+                    }
+
+                    //enabling javascript
+                    if (webSettings3 != null) {
+                        webSettings3.javaScriptEnabled=true
+                        webSettings3.allowContentAccess=true
+                        webSettings3.databaseEnabled=true
+                        webSettings3.domStorageEnabled=true
+                        webSettings3.useWideViewPort=true
+                    }
+
+                    if (smarthome_widget_webview3 != null) {
+                        if (!first_webview_load)
+                        { smarthome_widget_webview3.loadUrl("http://localhost:8123/lovelace-presence")
+                            first_webview_load=true
+                        }
                     }
 
                 }

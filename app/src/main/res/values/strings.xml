@@ -225,7 +225,7 @@ or recommendations will not work properly."</string>
     <string name="reset_wallpaper_action_title">Reset Wallpaper</string>
     <string name="reset_wallpaper_action_desc">Use default image</string>
     <string name="restore_pending">Restore pending…</string>
-    <string name="search_hint_text">Search movies, TV, and more</string>
+    <string name="search_hint_text">Search</string>
     <string name="search_menu_title">Search</string>
     <string name="select_app_customize_rows_title">Customize Home rows</string>
     <string name="select_app_order_action_fixed">Custom order</string>

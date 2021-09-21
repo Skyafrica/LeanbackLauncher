@@ -17,7 +17,7 @@
             android:focusable="true"
             >
             <LinearLayout
-                android:layout_width="350dp"
+                android:layout_width="410dp"
                 android:focusable="false"
                 android:layout_height="50dp"></LinearLayout>
 
@@ -25,14 +25,13 @@
                 android:id="@+id/widget1"
                 android:layout_width="160dp"
                 android:layout_height="90dp"
-                android:scaleType="centerCrop"
+                android:scaleType="fitXY"
                 android:background="@drawable/mywiget"
                 android:minWidth="180dp"
                 android:minHeight="80dp"
                 android:onClick="selectWidget1"
                 android:longClickable="true"
                 android:focusable="true"
-                app:cardElevation="5dp"
                 android:clickable="true"
                 android:contextClickable="true"
                 android:orientation="horizontal"
@@ -156,7 +155,9 @@
     </LinearLayout>
     <!-- weather wrapper -->
     <FrameLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
+        android:layout_marginTop="-30dp"
+        android:layout_gravity="right"
         android:layout_height="@dimen/widget_weather_height">
 
         <LinearLayout
@@ -214,7 +215,7 @@
 
         <LinearLayout
             android:id="@+id/details"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="match_parent"
             android:layout_gravity="end|center|top"
             android:gravity="end|top"

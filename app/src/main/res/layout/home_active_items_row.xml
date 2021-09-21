@@ -51,18 +51,85 @@
         android:paddingStart="@dimen/row_padding"
         android:paddingEnd="@dimen/row_padding" />
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="200dp"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="165dp"
+        android:layout_marginLeft="180dp"
+        android:layout_marginRight="180dp"
+        android:alpha="0.45"
+        android:gravity="center_horizontal"
         android:layout_gravity="bottom"
+        android:backgroundTint="@color/lb_grey"
+        android:background="@drawable/border_buttons"
+        android:orientation="vertical"
+        android:focusable="false"
         android:visibility="visible">
 
+<androidx.cardview.widget.CardView
+    android:layout_width="300dp"
+    android:layout_height="155dp"
+    android:layout_marginLeft="5dp"
+    android:focusable="true"
+    android:layout_marginTop="5dp"
+    android:outlineAmbientShadowColor="@color/lb_grey"
+    android:backgroundTint="@color/black_opaque"
+    android:elevation="5dp">
         <WebView
-            android:id="@+id/smarhome_widget"
+            android:id="@+id/webview1"
+            android:layout_width="290dp"
+            android:layout_height="145dp"
+            android:elevation="15dp"
+            android:layout_marginTop="5dp"
+            android:requiresFadingEdge="vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_alignParentLeft="true"
+            android:background="@color/exo_white"
+            android:focusable="false" />
+            />
+</androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="300dp"
-            android:layout_height="200dp"
-            android:visibility="visible"
-            android:layout_marginBottom="20dp"
+            android:layout_height="155dp"
+            android:layout_marginTop="5dp"
             android:layout_centerHorizontal="true"
-            android:backgroundTint="@color/exo_white"></WebView>
+            android:outlineAmbientShadowColor="@color/lb_grey"
+            android:backgroundTint="@color/black_opaque"
+            android:focusable="true"
+            android:elevation="5dp">
+
+        <WebView
+            android:id="@+id/webview2"
+            android:layout_width="290dp"
+            android:layout_height="145dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:elevation="15dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/exo_white"
+            android:focusable="false" />
+            />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="300dp"
+            android:layout_height="155dp"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true"
+            android:focusable="true"
+            android:layout_marginTop="5dp"
+            android:outlineAmbientShadowColor="@color/lb_grey"
+            android:backgroundTint="@color/black_opaque"
+            android:elevation="5dp">
+        <WebView
+            android:id="@+id/webview3"
+            android:layout_width="290dp"
+            android:layout_height="145dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/exo_white"
+            android:elevation="15dp"
+            android:layout_marginLeft="5dp"
+            android:focusable="false" />
+        </androidx.cardview.widget.CardView>
     </RelativeLayout>
 </com.amazon.tv.leanbacklauncher.ActiveFrame>

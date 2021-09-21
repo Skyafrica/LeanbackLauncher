@@ -96,7 +96,7 @@
     <string name="lb_playback_controls_thumb_up_outline">Sélectionner +1</string>
     <string name="lb_search_bar_hint">Rechercher</string>
     <string name="lb_search_bar_hint_speech">\u0090\u0090Énoncer la recherche</string>
-    <string name="lb_search_bar_hint_with_title">Rechercher \"%1$s\"</string>
+    <string name="lb_search_bar_hint_with_title">Rechercher "</string>
     <string name="lb_search_bar_hint_with_title_speech">Énoncez votre recherche sur \"%1$s\"</string>
     <string name="lb_time_separator">:</string>
     <string name="mic_search_accessibility_hint">Sélectionner pour énoncer votre requête de recherche</string>
@@ -123,7 +123,7 @@
 Pour les activer, accédez aux paramètres."</string>
     <string name="recommendation_row_preparing_message">Préparation des recommandations…</string>
     <string name="restore_pending">Restauration en attente…</string>
-    <string name="search_hint_text">Rechercher des films, des émissions télévisées et bien plus</string>
+    <string name="search_hint_text">Rechercher</string>
     <string name="search_menu_title">Rechercher</string>
     <string name="select_app_order_action_fixed">"Personnaliser l'ordre"</string>
     <string name="select_app_order_action_recency">Ordre en fonction de la dernière utilisation</string>

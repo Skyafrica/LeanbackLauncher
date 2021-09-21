@@ -102,4 +102,6 @@
     <color name="settings_selection_indicator_color">#4ceeeeee</color>
     <color name="img_full_opaque">#00000000</color>
     <color name="amazon_orange">#ffa724</color>
+    <color name="trans">#80000000</color>
+    <color name="black_opaque">#AA000000</color>
 </resources>
