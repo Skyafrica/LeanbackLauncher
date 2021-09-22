@@ -14,17 +14,16 @@
             android:layout_height="wrap_content"
             android:background="@drawable/mywiget"
             android:backgroundTint="@color/img_full_opaque"
-            android:focusable="true"
-            >
+            android:focusable="false">
             <LinearLayout
-                android:layout_width="410dp"
+                android:layout_width="400dp"
                 android:focusable="false"
                 android:layout_height="50dp"></LinearLayout>
 
             <LinearLayout
                 android:id="@+id/widget1"
                 android:layout_width="160dp"
-                android:layout_height="90dp"
+                android:layout_height="wrap_content"
                 android:scaleType="fitXY"
                 android:background="@drawable/mywiget"
                 android:minWidth="180dp"
@@ -32,6 +31,7 @@
                 android:onClick="selectWidget1"
                 android:longClickable="true"
                 android:focusable="true"
+                android:nextFocusDown="@layout/home_apps_row"
                 android:clickable="true"
                 android:contextClickable="true"
                 android:orientation="horizontal"
@@ -42,13 +42,14 @@
 
             <LinearLayout
                 android:layout_width="10dp"
+                android:focusable="false"
                 android:layout_height="50dp">
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/widget2"
                 android:layout_width="160dp"
-                android:layout_height="90dp"
+                android:layout_height="wrap_content"
                 android:scaleType="fitCenter"
                 android:background="@drawable/mywiget"
                 android:minWidth="180dp"
@@ -57,6 +58,7 @@
                 android:focusable="true"
                 app:cardElevation="5dp"
                 android:clickable="true"
+                android:nextFocusDown="@layout/home_apps_row"
                 android:contextClickable="true"
                 android:orientation="horizontal"
                 android:visibility="visible">
@@ -64,13 +66,14 @@
 
             <LinearLayout
                 android:layout_width="10dp"
+                android:focusable="false"
                 android:layout_height="20dp">
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/widget3"
                 android:layout_width="160dp"
-                android:layout_height="90dp"
+                android:layout_height="wrap_content"
                 android:scaleType="fitCenter"
                 android:background="@drawable/mywiget"
                 android:minWidth="180dp"
@@ -80,6 +83,7 @@
                 app:cardElevation="5dp"
                 android:clickable="true"
                 android:contextClickable="true"
+                android:nextFocusDown="@layout/home_apps_row"
                 android:orientation="horizontal"
                 android:visibility="visible">
             </LinearLayout>
@@ -102,11 +106,13 @@
             android:focusable="true"
             android:gravity="start|center"
             android:orientation="vertical"
+            android:nextFocusDown="@layout/home_apps_row"
             android:textColor="@color/clock_text_color">
 
             <FrameLayout
                 android:layout_width="@dimen/widget_settings_size"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@layout/home_apps_row">
 
                 <ImageView
                     android:id="@+id/settings_selection_circle"
@@ -116,7 +122,8 @@
                     android:alpha="0.0"
                     android:contentDescription="@null"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/settings_selection_circle" />
+                    android:src="@drawable/settings_selection_circle"
+                    android:nextFocusDown="@layout/home_apps_row"/>
 
                 <ImageView
                     android:id="@+id/settings_icon"
@@ -126,7 +133,10 @@
                     android:alpha="1.0"
                     android:contentDescription="@null"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_settings" />
+                    android:src="@drawable/ic_settings"
+                    android:nextFocusLeft="@id/widget1"
+                    android:nextFocusForward="@layout/home_apps_row"
+                    android:nextFocusDown="@layout/home_apps_row"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -134,8 +144,10 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/launcher_settings"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:nextFocusDown="@layout/home_apps_row"/>
             </FrameLayout>
+
         </LinearLayout>
 
 

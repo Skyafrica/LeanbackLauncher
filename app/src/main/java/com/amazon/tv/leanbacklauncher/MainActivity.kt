@@ -3,6 +3,7 @@ package com.amazon.tv.leanbacklauncher
 import android.animation.*
 import android.annotation.SuppressLint
 import android.app.*
+import android.app.PendingIntent.getActivity
 import android.appwidget.AppWidgetHost
 import android.appwidget.AppWidgetHostView
 import android.appwidget.AppWidgetManager
@@ -10,7 +11,6 @@ import android.appwidget.AppWidgetProviderInfo
 import android.content.*
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
@@ -18,10 +18,9 @@ import android.location.Location
 import android.media.tv.TvContract
 import android.net.Uri
 import android.os.*
+import android.preference.PreferenceManager
 import android.provider.Settings
-import android.text.Editable
 import android.text.TextUtils
-import android.util.AttributeSet
 import android.util.Log
 import android.view.*
 import android.view.ViewGroup.OnHierarchyChangeListener
@@ -31,7 +30,6 @@ import android.view.animation.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.isDigitsOnly
 import androidx.leanback.widget.BaseGridView
@@ -76,14 +74,11 @@ import java.io.FileDescriptor
 import java.io.PrintWriter
 import java.lang.Runnable
 import java.lang.String.format
-import java.lang.reflect.InvocationTargetException
-import java.lang.reflect.Method
 import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import kotlin.math.roundToInt
-import android.view.InflateException
 
 import android.widget.TextView
 
@@ -91,9 +86,8 @@ import android.view.LayoutInflater
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.view.MotionEvent
-
-
-
+import androidx.core.content.ContextCompat
+import com.google.android.material.internal.ContextUtils.getActivity
 
 
 class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
@@ -110,10 +104,11 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
 
      var first_webview_load=false
     //restor widget 1
-    var appWidgetId_w1 = 0
-    var appWidgetId_w2 = 0
-    var appWidgetId_w3 = 0
+     var appWidgetId_w1 = 0
+     var appWidgetId_w2 = 0
+     var appWidgetId_w3 = 0
     var widget_id_custom=1
+    var widget_number =1
 
     var mainlayout1: ViewGroup? = null
 
@@ -333,6 +328,10 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appWidgetId_w1=0
+        appWidgetId_w2=0
+        appWidgetId_w3=0
+
         mContentResolver = contentResolver
         if (mRecommendationsAdapter == null) {
             mRecommendationsAdapter = NotificationsAdapter(this)
@@ -340,7 +339,7 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         val appContext = applicationContext
         setContentView(R.layout.activity_main)
         first_webview_load=false
-
+        showSystemUI()
 
         //first web view
         var smarthome_widget_webview: WebView? = findViewById(R.id.webview1)
@@ -440,13 +439,11 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         mAppWidgetManager1 = AppWidgetManager.getInstance(getApplicationContext())
         mAppWidgetHost1 = AppWidgetHost(getApplicationContext(), R.id.APPWIDGET_HOST_ID)
 
-        //val button_w2 = findViewById<View>(R.id.main_layout4) as CardView
-        //val button_w3 = findViewById<View>(R.id.main_layout5) as CardView
+    //recovering widget host id
+        //button6.setVisibility(View.VISIBLE);
 
-        //button_w1.setOnClickListener(View.OnClickListener {
-         // selectWidget()
 
-        //})
+//sasb widget save values
 
 
 
@@ -535,6 +532,9 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                                     }
                                 })
                             }
+
+
+
                             addWidget(false)
                         }
                         1, 2 -> {
@@ -576,6 +576,10 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                     //first web view
                     var smarthome_widget_webview: WebView? = findViewById(R.id.webview1)
                     val webSettings = smarthome_widget_webview?.settings
+
+                    //save widget1 id
+
+
 
                     if (smarthome_widget_webview != null) {
                         smarthome_widget_webview.webViewClient = WebViewClient()
@@ -702,9 +706,13 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
             val view: View = mainlayout1.getChildAt(childCount - 1)
             if (view is AppWidgetHostView) {
                // removeWidget1((view as AppWidgetHostView)!!)
+                   widget_number=1
                    showMenu(view)
                 return
             }
+
+
+
         }
 
         else {
@@ -730,7 +738,8 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         if (childCount > 0) {
             val view: View = mainlayout1.getChildAt(childCount - 1)
             if (view is AppWidgetHostView) {
-                removeWidget2((view as AppWidgetHostView)!!)
+                widget_number=2
+                showMenu_2(view)
                 return
             }
         }
@@ -749,12 +758,30 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
 
     fun selectWidget3(view: View) {
 
-        val appWidgetId = mAppWidgetHost1!!.allocateAppWidgetId()
-        val pickIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_PICK)
-        pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-        addEmptyData(pickIntent)
-        startActivityForResult(pickIntent, R.id.REQUEST_PICK_APPWIDGET)
-        widget_id_custom=3
+
+        val mainlayout1: ViewGroup? =
+            findViewById<View>(R.id.widget3) as LinearLayout
+
+        val childCount: Int = mainlayout1!!.getChildCount()
+
+        if (childCount > 0) {
+            val view: View = mainlayout1.getChildAt(childCount - 1)
+            if (view is AppWidgetHostView) {
+                widget_number=3
+                showMenu_3(view)
+                return
+            }
+        }
+
+        else {
+
+            val appWidgetId = mAppWidgetHost1!!.allocateAppWidgetId()
+            val pickIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_PICK)
+            pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            addEmptyData(pickIntent)
+            startActivityForResult(pickIntent, R.id.REQUEST_PICK_APPWIDGET)
+            widget_id_custom = 3
+        }
     }
 
     fun addEmptyData(pickIntent: Intent) {
@@ -802,15 +829,19 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
 
     override fun onBackPressed() {
 
+        //val preferences_widget = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        //val editor_widget = preferences_widget.edit()
+
+
+        //editor_widget.putString("w1", Integer.toString(appWidgetId_w1))
+        //editor_widget.putString("w2", Integer.toString(appWidgetId_w2))
+        //editor_widget.putString("w3", Integer.toString(appWidgetId_w3))
+
+        //editor_widget.apply()
+
+
 
         currentFocus?.clearFocus();
-
-
-
-
-
-
-
         when {
             isInEditMode -> {
                 editModeView?.onBackPressed()
@@ -915,6 +946,8 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
             val mainlayout1: ViewGroup? =
                 findViewById<View>(R.id.widget1) as LinearLayout
             mainlayout1?.addView(hostView)
+
+
         }
 
         if  (widget_id_custom==2) {
@@ -925,6 +958,8 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                 findViewById<View>(R.id.widget2) as LinearLayout
             mainlayout1?.removeAllViews()
             mainlayout1?.addView(hostView)
+
+
         }
         if  (widget_id_custom==3) {
 
@@ -935,7 +970,24 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                 findViewById<View>(R.id.widget3) as LinearLayout
 
             mainlayout1?.addView(hostView)
+            //save widget1 id
+
         }
+
+        val preferences_widget = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val editor_widget = preferences_widget.edit()
+
+
+        editor_widget.putString("w1", Integer.toString(appWidgetId_w1))
+        editor_widget.putString("w2", Integer.toString(appWidgetId_w2))
+        editor_widget.putString("w3", Integer.toString(appWidgetId_w3))
+
+        editor_widget.apply()
+
+
+
+
+
 
 
     }
@@ -1898,6 +1950,54 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
 
     private fun addWidget(refresh: Boolean) {
         val wrapper: ViewGroup? = findViewById<View>(R.id.widget_wrapper) as? LinearLayout?
+        val preferences_widget = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+
+        val state_w1:String? = preferences_widget.getString("w1", "0")
+        val state_w2 :String?= preferences_widget.getString("w2", "0")
+        val state_w3:String?  = preferences_widget.getString("w3", "0")
+
+
+        //restor widget 1
+        if (state_w1 != null)
+        {
+
+            Log.v("w1ID", Integer.valueOf(state_w1).toString())
+            if (Integer.valueOf(state_w1)>0) {
+                appWidgetId_w1 = Integer.valueOf(state_w1)
+                //appWidgetId_w1=291
+            }
+
+        }
+        if (state_w2 != null)
+        {
+
+            Log.v("w2ID", Integer.valueOf(state_w2).toString())
+            if (Integer.valueOf(state_w2)>0) {
+                appWidgetId_w2 = Integer.valueOf(state_w2)
+                //appWidgetId_w1=291
+            }
+
+        }
+
+        if (state_w3 != null)
+        {
+
+            Log.v("w3ID", Integer.valueOf(state_w3).toString())
+            if (Integer.valueOf(state_w3)>0) {
+                appWidgetId_w3 = Integer.valueOf(state_w3)
+                //appWidgetId_w1=291
+            }
+
+        }
+
+
+
+
+
+
+
+
+
         wrapper?.let { wrap ->
             if (refresh || mAppWidgetHostView == null) {
                 wrap.removeAllViews() //sasb
@@ -1931,7 +2031,18 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                                     options
                                 ) == true
 
+
+
+
+                                mAppWidgetManager = AppWidgetManager.getInstance(this)
+                                mAppWidgetHost = AppWidgetHost(this, R.id.APPWIDGET_HOST_ID)
+
+
+
                                 //sasb widget selection
+
+
+
 
                                 if ((!(appWidgetId_w1==0))) {
 
@@ -2210,6 +2321,10 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         }
         //sasb widget selection
 
+        try {
+
+
+
         if ((!(appWidgetId_w1==0))) {
 
             val myappWidgetInfo = mAppWidgetManager1!!.getAppWidgetInfo(appWidgetId_w1)
@@ -2247,6 +2362,10 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
             mainlayout1?.addView(hostView)
 
 
+        }
+        } catch (e: Exception)
+        {
+            Log.v("error","error"+appWidgetId_w3)
         }
 
         //end ofsasb widget selection
@@ -2433,8 +2552,43 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         return false
     }
 
+    //menue widget1
     fun showMenu(v: View?) {
         val popup = PopupMenu(this, v)
+        widget_number=1
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener { item: MenuItem? ->
+            onMenuItemClick(
+                item!!
+            )
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popup.setForceShowIcon(true)
+        }
+        popup.inflate(R.menu.app_menu1)
+        popup.show()
+    }
+    //menue widget2
+    fun showMenu_2(v: View?) {
+        val popup = PopupMenu(this, v)
+       widget_number=2
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener { item: MenuItem? ->
+            onMenuItemClick(
+                item!!
+            )
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popup.setForceShowIcon(true)
+        }
+        popup.inflate(R.menu.app_menu2)
+        popup.show()
+    }
+
+    //menue widget3
+    fun showMenu_3(v: View?) {
+        val popup = PopupMenu(this, v)
+        widget_number=3
 
         // This activity implements OnMenuItemClickListener
         popup.setOnMenuItemClickListener { item: MenuItem? ->
@@ -2445,16 +2599,63 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             popup.setForceShowIcon(true)
         }
-        popup.inflate(R.menu.app_menu)
+        popup.inflate(R.menu.app_menu3)
         popup.show()
     }
 
+
+
+//Menue 1
     fun onMenuItemClick(item: MenuItem): Boolean {
+
+    if (widget_number == 1) {
+
+    return when (item.itemId) {
+        R.id.open_widget1 -> {
+            //startActivityForResult(Intent(Settings.ACTION_WIFI_SETTINGS), 0)
+            val mainlayout1: ViewGroup? =
+                findViewById<View>(R.id.widget1) as LinearLayout
+
+            val childCount: Int = mainlayout1!!.getChildCount()
+
+            if (childCount > 0) {
+                val view: View = mainlayout1.getChildAt(childCount - 1)
+                if (view is AppWidgetHostView) {
+                    view.requestFocus()
+                }
+            }
+            true
+        }
+
+        R.id.delete_widget_1 -> {
+            // startActivityForResult(Intent(Settings.ACTION_SOUND_SETTINGS), 0)
+
+            val mainlayout1: ViewGroup? =
+                findViewById<View>(R.id.widget1) as LinearLayout
+
+            val childCount: Int = mainlayout1!!.getChildCount()
+
+            if (childCount > 0) {
+                val view: View = mainlayout1.getChildAt(childCount - 1)
+                if (view is AppWidgetHostView) {
+                    removeWidget1((view as AppWidgetHostView)!!)
+                }
+            }
+            true
+        }
+
+
+        else -> false
+    }
+}
+
+    if (widget_number == 2) {
+
         return when (item.itemId) {
-            R.id.open_widget1 -> {
+            R.id.open_widget2 -> {
                 //startActivityForResult(Intent(Settings.ACTION_WIFI_SETTINGS), 0)
                 val mainlayout1: ViewGroup? =
-                    findViewById<View>(R.id.widget1) as LinearLayout
+                    findViewById<View>(R.id.widget2) as LinearLayout
 
                 val childCount: Int = mainlayout1!!.getChildCount()
 
@@ -2467,18 +2668,18 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
                 true
             }
 
-            R.id.delete_widget_1-> {
-               // startActivityForResult(Intent(Settings.ACTION_SOUND_SETTINGS), 0)
+            R.id.delete_widget_2 -> {
+                // startActivityForResult(Intent(Settings.ACTION_SOUND_SETTINGS), 0)
 
                 val mainlayout1: ViewGroup? =
-                    findViewById<View>(R.id.widget1) as LinearLayout
+                    findViewById<View>(R.id.widget2) as LinearLayout
 
                 val childCount: Int = mainlayout1!!.getChildCount()
 
                 if (childCount > 0) {
                     val view: View = mainlayout1.getChildAt(childCount - 1)
                     if (view is AppWidgetHostView) {
-                        removeWidget1((view as AppWidgetHostView)!!)
+                        removeWidget2((view as AppWidgetHostView)!!)
                     }
                 }
                 true
@@ -2488,6 +2689,66 @@ class MainActivity : AppCompatActivity(), OnEditModeChangedListener,
             else -> false
         }
     }
+
+    if (widget_number == 3) {
+
+        return when (item.itemId) {
+            R.id.open_widget3 -> {
+                //startActivityForResult(Intent(Settings.ACTION_WIFI_SETTINGS), 0)
+                val mainlayout1: ViewGroup? =
+                    findViewById<View>(R.id.widget3) as LinearLayout
+
+                val childCount: Int = mainlayout1!!.getChildCount()
+
+                if (childCount > 0) {
+                    val view: View = mainlayout1.getChildAt(childCount - 1)
+                    if (view is AppWidgetHostView) {
+                        view.requestFocus()
+                    }
+                }
+                true
+            }
+
+            R.id.delete_widget_3 -> {
+                // startActivityForResult(Intent(Settings.ACTION_SOUND_SETTINGS), 0)
+
+                val mainlayout1: ViewGroup? =
+                    findViewById<View>(R.id.widget3) as LinearLayout
+
+                val childCount: Int = mainlayout1!!.getChildCount()
+
+                if (childCount > 0) {
+                    val view: View = mainlayout1.getChildAt(childCount - 1)
+                    if (view is AppWidgetHostView) {
+                        removeWidget3((view as AppWidgetHostView)!!)
+                    }
+                }
+                true
+            }
+
+            else -> false
+        }
+    }
+    else
+        return false
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+         showSystemUI()
+    }
+
+    //change top bar color
+
+    private fun showSystemUI() {
+        Log.v("nabil","nabil")
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        val window = window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.img_full_opaque)
+
+    }
+
 
 
 }

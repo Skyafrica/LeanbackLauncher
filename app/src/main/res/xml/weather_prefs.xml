@@ -5,7 +5,7 @@
     <PreferenceCategory>
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/pref_enable_local_weather"
             android:title="@string/enable_local_weather_title"
             android:summary="@string/enable_local_weather_description" />

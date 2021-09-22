@@ -16,7 +16,7 @@ class SettingsAdapter(context: Context?, private val mConnectivityListener: Conn
     AppsAdapter(context!!, null, AppCategory.SETTINGS) {
     private val mHandler: Handler = NetworkUpdateHandler(this)
     private var mNetResources: Resources? = null
-    private var mNetResourcesSet = false
+    private var mNetResourcesSet = true
 
 //    companion object {
 //        private const val TAG = "SettingsAdapter"

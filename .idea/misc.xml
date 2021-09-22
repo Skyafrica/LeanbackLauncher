@@ -10,7 +10,15 @@
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/borders.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/borders_new.xml" value="0.2703125" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/borders_new_unfocus.xml" value="0.2703125" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/legacy_preferences_checkmark.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/mywiget.xml" value="0.2703125" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/network_state_cellular_0.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/network_state_cellular_3.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/network_state_disconnected.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/network_state_ethernet.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/network_state_wifi_2.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/rec_card_background.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/drawable/settings_selection_circle.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/activity_update.xml" value="0.136" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/app_banner.xml" value="0.13020833333333334" />
@@ -32,10 +40,14 @@
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/wallpaper.xml" value="0.2" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/layout/widget_wrapper.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/menu/app_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/menu/app_menu1.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/menu/app_menu2.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/menu/app_menu3.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/menu/widget_menu.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/xml/home_prefs.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/xml/prefs.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/xml/rows_prefs.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/poste/Desktop/LeanbackLauncher/app/src/main/res/xml/weather_prefs.xml" value="0.1265625" />
       </map>
     </option>
   </component>
